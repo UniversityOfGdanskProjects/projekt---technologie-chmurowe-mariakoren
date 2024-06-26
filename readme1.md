@@ -27,6 +27,6 @@ Frontend pod adresem localhost:3000
 
 Backend pod adresem localhost:5000
 
-Dodatkowo przy pierwszym uruchamieniu trzeba załadować zawartość pliku app-realm.json 
+Dodatkowo przy pierwszym uruchamieniu trzeba załadować zawartość pliku app-realm.json do keycloak aby stworzyć realm z całą, niezbędną zawartością
 
 
