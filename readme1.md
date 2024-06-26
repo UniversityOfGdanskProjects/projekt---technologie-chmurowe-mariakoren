@@ -1,5 +1,14 @@
 # Projekt z przedmiotu bezpieczeństwo aplikacji webowych
 
+
+## Autor: Maria Koren
+
+## Krótki opis:
+
+Aplikacja jest słownikiem języka międzysłowiańskiego. Na stronie localhost:3000 widać 3 przyciski. Po kliknięciu na "opinie" możemy czytać i dodawać opinii (nie potrzebuje logowania). Po kliknięciu na "lista słów" można zobaczyć listę słów wraz z tłumaczeniami. Po kliknięciu na "moje słowa" zostanie wykonane przekierowanie na keycloak. Po udanym zalogowaniu zostanie widoczna lista wcześniej zapisanych słów. Jeżeli teraz wejdziemy na sronę lista słów, dodatkowo przy każdym słowie pojawi się możliwość zapisać to słowo. Dodatkowo jest opcja administratora. Przy zalogowaniu się jako administrator będą widocznę zapisanę słowa dla każdego użytkownika, pojawi się możliwość dodania słów, usuwania słów, usuwania opinii.
+
+## Uruhamienie
+
 Aplikacja w całości działa na platfrormie kubernetes
 
 W celu uruchamienia trzeba wejść do folderu project/kubernetes i użyć komenty `kubectl apply -f .`
