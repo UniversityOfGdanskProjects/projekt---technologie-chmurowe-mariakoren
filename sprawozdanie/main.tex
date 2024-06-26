@@ -9,7 +9,7 @@
 \usepackage{subfig}
 \usepackage{multirow}
 \usepackage{multicol}
-\graphicspath{{Imagens/}}
+\graphicspath{{images/}}
 \usepackage{xcolor,colortbl}
 \usepackage{float}
 
@@ -27,6 +27,9 @@
 \usepackage{color}
 \usepackage{verbatim}
 \usepackage{framed}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -85,17 +88,17 @@
 \rhead{\hmwkAuthorName} % Top left header
 \lhead{\hmwkClass: \hmwkTitle} % Top center header
 \rhead{\firstxmark} % Top right header
-\lfoot{Jan Kowalski} % Bottom left footer
+\lfoot{Maria Koren} % Bottom left footer
 \cfoot{} % Bottom center footer
 \rfoot{} % Bottom right footer
 \renewcommand{\headrulewidth}{1pt}
 \renewcommand{\footrulewidth}{1pt}
 
     
-\newcommand{\hmwkTitle}{Tytuł projektu z technologii chmurowych} % Tytuł projektu
+\newcommand{\hmwkTitle}{Słownik międzysłowniańskiego języka} % Tytuł projektu
 \newcommand{\hmwkDueDate}{\today} % Data 
 \newcommand{\hmwkClass}{Technologie chmurowe} % Nazwa przedmiotu
-\newcommand{\hmwkAuthorName}{Jan Kowalski} % Imię i nazwisko
+\newcommand{\hmwkAuthorName}{Maria Koren} % Imię i nazwisko
 
 % trabalho 
 \begin{document}
@@ -105,7 +108,7 @@
 	\begin{center}
 	\hspace*{-1cm}
 	\vspace*{0.5cm}
-    \includegraphics[scale=0.55]{imagens/loga.png}\\
+    \includegraphics[scale=0.55]{images/loga.png}\\
 	\textbf{Uniwersytet Gdański \\ [0.05cm]Wydział Matematyki, Fizyki i Informatyki \\ [0.05cm] Instytut Informatyki}
 
 	\vspace{0.6cm}
@@ -136,52 +139,141 @@
 \section{Opis projektu}
 \label{sec:Project}
 
-Tutaj wypisujemy szczegółowe informacje o celu powstania projektu (jakaś historyjka, że pewna firma/osoba potrzebuje bazy, która ...)
+% Tutaj wypisujemy szczegółowe informacje o celu powstania projektu (jakaś historyjka, że pewna firma/osoba potrzebuje bazy, która ...)
 
-\subsection{Opis architektury - 8 pkt}
+Projekt reprezentujący słownik języka międzysłowiańskiego powstał z myślą o ludziach, chcących się nauczyć powyższego języka. Na moment stworzenia aplikacji znaleziony został tylko słownik języka międzysłowiańskiego \cite{slownik}. Ale ten słownik jest zwykłym słownikiem i nie nadaje się do uczenia języka. Dlatego w aplikacji oprócz przeglądania słów można je zapisać sobie i wrócić do listy swoich zapisanych słów. Administrator może dodawać nowe słowa, usuwać istniejące słowa, przeglądać i usuwać słowa zapisane przez wszystkich użytkowników. Ponieważ aplikacja jest innowacją, zostawiona możliwość dodawania opinii przez każdego użytkownika Z racji tego, że czasami użytkownicy mogą dawać niewłaściwe komentarze administrator może je usuwać.
+
+\subsection{Opis architektury}
 \label{sec:introduction}
-Powinna zawierać opis architektury aplikacji opartej na Kubernetes, w tym opis klastrowego systemu zarządzania kontenerami, wykorzystanych modułów i komponentów
+% Powinna zawierać opis architektury aplikacji opartej na Kubernetes, w tym opis klastrowego systemu zarządzania kontenerami, wykorzystanych modułów i komponentów
+
+Kubernetes to przenośna, rozszerzalna platforma typu open source do zarządzania kontenerowymi obciążeniami i usługami, która ułatwia zarówno deklaratywną konfigurację, jak i automatyzację. Posiada duży, szybko rozwijający się ekosystem. Usługi, wsparcie i narzędzia Kubernetes są powszechnie dostępne.
+
+Aplikacja w kubernetesie składa się z następujących elementów:
+
+\begin{itemize}
+    \item Kubernetes Cluster: Centralny element zarządzania kontenerami, składający się z jednego lub więcej węzłów (nodes). Każdy węzeł może być maszyną wirtualną lub fizyczną, zarządzaną przez Kubernetes.
+
+    \item Pods: Najmniejsza jednostka przetwarzania w Kubernetes, która może zawierać jeden lub więcej kontenerów. Aplikacja będzie uruchomiona w wielu podach.
+
+    \item Services: Abstrakcja sieciowa w Kubernetes, która definiuje logiczny zestaw podów i politykę dostępu do nich. Usługi zapewniają stały punkt dostępu do zmieniających się dynamicznie zestawów podów.
+
+    \item Deployments: Służą do deklaratywnego zarządzania podami i replikami aplikacji. Umożliwiają wdrażanie nowych wersji aplikacji i automatyczne skalowanie.
+
+    \item ConfigMaps i Secrets: Mechanizmy do zarządzania konfiguracją aplikacji i danymi wrażliwymi, takimi jak hasła i klucze API.
+    
+\end{itemize}
 
 
-\subsection{Opis infrastruktury - 6 pkt}
+Opisywana aplikacja składa się z takich mikroserwisów jak Frontend, Backend, Keycloak, Bazy Danych.
+
+Aplikacja działa na jednym węzle. Każdy ze wcześniej wymienionych komponentów ma zdefionowane service i deployment
+
+
+\subsection{Opis infrastruktury}
 \label{sec:Users}
 
-Powinien zawierać informacje na temat środowiska, w którym aplikacja będzie działać, a także wykorzystanych narzędzi i platformy chmurowe. Ważne jest również zwrócenie uwagi na wykorzystanie zasobów, takich jak sieci i pamięci masowej.
+% Powinien zawierać informacje na temat środowiska, w którym aplikacja będzie działać, a także wykorzystanych narzędzi i platformy chmurowe. Ważne jest również zwrócenie uwagi na wykorzystanie zasobów, takich jak sieci i pamięci masowej.
 
-\subsection{Opis komponentów aplikacji - 8 pkt}
+Projekt działa w środowisku lokalnym, co oznacza, że wszystkie komponenty Kubernetes są uruchomione na wirtualnych środowiskach, takim jak Kind (Kubernetes IN Docker). 
+
+Aplikacja jest konteneryzowana za pomocą Dockera, co umożliwia jej uruchomienie w izolowanych środowiskach. Definicje wdrożeń (deployments) oraz usług (services) są zapisane w plikach YAML, co umożliwia ich łatwe zarządzanie i wersjonowanie.
+
+\subsection{Opis komponentów aplikacji}
 \label{sec:FunctionalConditions}
 
-Powinna zawierać informacje na temat komponentów aplikacji, takich jak serwisy, aplikacje i bazy danych. W szczególności należy zwrócić uwagę na sposoby ich wdrażania, konfiguracji i zarządzania.
+% Powinna zawierać informacje na temat komponentów aplikacji, takich jak serwisy, aplikacje i bazy danych. W szczególności należy zwrócić uwagę na sposoby ich wdrażania, konfiguracji i zarządzania.
 
-\subsection{Konfiguracja i zarządzanie - 4 pkt}
+Aplikacja składa się z następujących komponentów:
+
+\begin{itemize}
+    \item Backend
+    \item Frontend
+    \item Keycloak
+    \item Bazy Danych
+\end{itemize}
+
+
+\subsubsection{Backend}
+
+Backend został napisany w języku JavaScript. Uruchamiany jako kontener Docker. Komunikuje się z bazą danych MongoDB, frontende, aplikacji. Ma zabiespieczone endpointy, weryfikujące role: zalogowany użytkownik, zalogowany jako admin.
+
+\subsubsection{Frontend}
+Jest to aplikacja kliencka, napisana wykorzystując React. Uruchamiany jako kontener Docker. Komunikuję się z backendem dla dostarczania informacji. Przy logowaniu przekierowuje na Keycloak.
+
+\subsubsection{Keycloak}
+System zarządzania tożsamością i dostępem, korzystający z bazy danych Postgres. Uruchamiany w Kubernetes jako osobny pod
+
+
+\subsubsection{Bazy Danych}
+Zostały użyte 2 bazy danych: MongoDB oraz Postgres. Baza MongoDB służy do przechowywania danych, dotyczących aplikacji: słowa, opinii, słowa zapisane dla użytkownika. Baza Postgres używana dla przechowywania danych z Keycloaka.
+
+
+\subsection{Konfiguracja i zarządzanie}
 \label{sec:NonFunctionalConditions}
 
-Powinna zawierać informacje na temat konfiguracji i zarządzania aplikacją na poziomie klastra Kubernetes.
+% Powinna zawierać informacje na temat konfiguracji i zarządzania aplikacją na poziomie klastra Kubernetes.
 
-\subsection{Zarządzanie błędami - 2 pkt}
+W celu konfiguracji i zarzącania zostały napisane pliki backend.yaml, frontend.yaml, mongo.yaml, postgres.yaml - dla tych komponentów. Dla keycloaka to są pliki keycloak-claim0-persistentvolumeclaim.yaml, keycloak-deployment.yaml, keycloak-service.yaml.
+
+Bazą plików dla keycloka służył plik docker-compose.yaml, z którego za pomocą narzędzia kompose zrobiony został plik dla kubernetes. 
+
+Kompose to narzędzie open-source, które umożliwia łatwe przekształcanie definicji aplikacji w Docker Compose do konfiguracji dla Kubernetes. \cite{kompose}
+
+Dla keycloka pomimo service i deployment został zdefiniowany PersistentVolumeClaim. PersistentVolumeClaim (PVC) to obiekt w Kubernetes, który reprezentuje żądanie zasobów pamięci masowej przez użytkownika. W systemie Kubernetes PersistentVolume (PV) to zasób pamięci masowej zarządzany przez klaster, natomiast PersistentVolumeClaim to sposób, w jaki użytkownicy lub aplikacje mogą żądać tych zasobów. \cite{oktawave}
+
+
+Oprócz Keycloaka persistance volume claim został zdefiniowany dla obu baz danych - MongoDB oraz Postgres. Aby zabiespieczyć trwałość danych.
+\subsection{Zarządzanie błędami}
 \label{sec:ERD} 
 
-Powinna zawierać informacje na temat sposobów zarządzania błędami aplikacji oraz sposobów monitorowania i reagowania na awarie.
+% Powinna zawierać informacje na temat sposobów zarządzania błędami aplikacji oraz sposobów monitorowania i reagowania na awarie.
+
+Zarządzanie błędami zapewnia stabilność i niprzerwaną pracę systemu, W Kubernetesie, jako zaawansowanej platformie zarządzania kontenerami, są pewne wpudowane mechanizmy automatycznego restartowania podów, które mogą przestać działać z różnych powodów.
+
+Automatyczne restartowanie podów w Kubernetes jest kluczowe aby utrzymać wysoką dostępność aplikacji. Gdy pod przestaje działać, na przykład z powodu błędu aplikacyjnego lub awarii węzła, Kubernetes wykrywa ten stan i podejmuje odpowiednie działania. Proces restartowania może obejmować przenoszenie poda na inny węzeł lub próbę uruchomienia go ponownie na tym samym węźle.
 
 
-\subsection{Skalowalność - 4 pkt}
+
+
+\subsection{Skalowalność}
 \label{sec:ExamplesSection}
 
-Skalowalność jest kluczowa w architekturze aplikacji opartej na Kubernetes. Należy opisać, jak aplikacja może być skalowana, w jaki sposób skalowanie jest monitorowane i jakie narzędzia są wykorzystywane w tym celu.
+% Skalowalność jest kluczowa w architekturze aplikacji opartej na Kubernetes. Należy opisać, jak aplikacja może być skalowana, w jaki sposób skalowanie jest monitorowane i jakie narzędzia są wykorzystywane w tym celu.
 
-\subsection{Wymagania dotyczące zasobów - 2 pkt}
+
+Jedną z ważniejszych korzyści, jakie zapewnia Kubernetes, jest możliwość łatwego skalowania aplikacji. Skalowanie aplikacji pozwala uruchomić ją na dowolnej liczbie serwerów, aby obsłużyć rosnącą liczbę użytkowników.\cite{oktawave}
+
+W powyższym projekcie użyłam skalowania automatycznego, polegającego na wykorzystaniu mechanizmu nazywanego HPA (Horizontal Pod Autoscaler), który monitoruje obciążenie podów i automatycznie dostosowuje ich liczbę do aktualnego zapotrzebowania. 
+
+Podany mechanizm opiera się na monitorowaniu obciążenia cpu - jak jest powyżej 50\% zwiększ ilość replik. Repliki są skalowane od 1 do 10.
+
+\subsection{Wymagania dotyczące zasobów}
 \label{sec:ExampleTables}
 
-Powinna zawierać informacje na temat wymagań dotyczących zasobów dla każdego komponentu aplikacji, takie jak ilość pamięci RAM, CPU, miejsce na dysku, itp. Należy również opisać, jakie są oczekiwania dotyczące wydajności i czasu odpowiedzi dla aplikacji.
+% Powinna zawierać informacje na temat wymagań dotyczących zasobów dla każdego komponentu aplikacji, takie jak ilość pamięci RAM, CPU, miejsce na dysku, itp. Należy również opisać, jakie są oczekiwania dotyczące wydajności i czasu odpowiedzi dla aplikacji.
+
+Ograniczenie zasobów w Kubernetes pozwala kontrolować, ile CPU i pamięci jest dostępnych dla poda. Ograniczenia te mogą być ustawione na poziomie kontenera. \cite{stepik}. Limity tę powodują, że komponent aplikacji nie będzie mógł zużywać więcej ustawionych limitów pamięci lub cpu.
+
+W podanej aplikacji limity ustamione nastepująco:
+
+\begin{itemize}
+    \item Backend: 1Gi pamięci, 1 jednostka CPU
+    \item Frontend: 1Gi pamięci, 0.5 jednostki CPU
+    \item MongoDB: 1Gi pamięci, 1 jednostka CPU
+    \item Postgres: 1Gi pamięci, 1 jednostka CPU
+\end{itemize}
 
 
-\subsection{Architektura sieciowa - 4 pkt}
+\subsection{Architektura sieciowa}
 \label{sec:ExampleResults}
 
-powinna zawierać informacje na temat architektury sieciowej aplikacji, w tym sposobu konfiguracji sieci w klastrze Kubernetes, wykorzystywanych protokołów i narzędzi do zarządzania siecią.
+% powinna zawierać informacje na temat architektury sieciowej aplikacji, w tym sposobu konfiguracji sieci w klastrze Kubernetes, wykorzystywanych protokołów i narzędzi do zarządzania siecią.
 
-\noindent
-\textbf{Każdy odnośnik, który znajdzie się w literaturze musi mieć swoje odwołanie w projekcie. - 2 pkt} 
+Jednym z głównych komponentów w Kubernetes jest sieć. Sieć w kubernetes pomaga w komunikacji między komponentami, aby się widziały nawzajem. W opisanej aplikacji trzema głównymi komponentami, które muszą być dostępne na zewnątrz, są frontend, backend oraz keycloak. Dla każdego z tych komponentów w klastrze Kubernetes konfiguruje się osobny LoadBalancer. LoadBalancer jest mechanizmem, który umożliwia równoważenie obciążenia i udostępnianie usług na zewnątrz klastra, zapewniając im publiczny dostęp.
+
+Dzięki temu każdy z wymienionych komponentów (frontend, backend, keycloak) może być dostępny i komunikować się z użytkownikami lub innymi systemami spoza klastra Kubernetes, co jest kluczowe w architekturze mikroserwisowej i rozproszonych systemach aplikacyjnych.
+\newpage
 
 \bibliographystyle{amsplain}
 \bibliography{references.bib}
